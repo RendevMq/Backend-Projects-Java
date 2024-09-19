@@ -30,7 +30,6 @@ public class SecurityConfig {
     private JwtUtils jwtUtils;
 
     //CONFIUGRAMOS EL SECURITY FILTER CHAIN
-    //httpSecurity es el objeto que pasa por todos los filtros
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -39,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     // Configurar los endpoints PUBLICOS
-                    http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll(); //hacemos publicos todos los endpoints de auth porque cuando nos vamos a loguear solo mandamos por el body y no por AUTHORIZATION.. no entendi 1:18:00 -1:24:00
+                    http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
 
                     // Cofnigurar los endpoints PRIVADOS
                     http.requestMatchers(HttpMethod.POST, "/api/posts").hasAnyRole("ADMIN", "USER");
@@ -52,7 +51,7 @@ public class SecurityConfig {
                     // Configurar el resto de endpoint - NO ESPECIFICADOS
                     http.anyRequest().denyAll();
                 })
-                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)//Agregamos el filtro, y queremos que se ejecute el filtor de JWT antes de que se ejecute el filtro de Autenticacion (Basic Authentication)
+                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 
@@ -65,10 +64,8 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsServerImpl userDetailsServer) {
 
-        //El autentication tiene muchas implementaciones, en este caso usaremos el del DAO
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder() );
-        //provider.setUserDetailsService(userDetailsService());
         provider.setUserDetailsService(userDetailsServer);
 
         return provider;
@@ -77,8 +74,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
-        //return NoOpPasswordEncoder.getInstance(); //NO CODIFICA, SOLO PARA PRUEBAS POR SEGURIDAD
         return new BCryptPasswordEncoder();
     }
 
