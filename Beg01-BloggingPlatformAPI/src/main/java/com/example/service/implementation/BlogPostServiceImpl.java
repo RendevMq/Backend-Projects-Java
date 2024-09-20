@@ -14,12 +14,7 @@ import com.example.service.interfaces.IBlogPostService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import java.security.Principal;
 
 
 import java.time.LocalDateTime;
@@ -162,6 +157,22 @@ public class BlogPostServiceImpl implements IBlogPostService {
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<BlogPostDTO> searchByTerm(String term) {
+        return blogPostRepository.findByTitleContainingOrContentContainingOrCategory_NameEqualsOrTags_NameIn(term, term, term, List.of(term)).stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    /*
+    @Override
+    public List<BlogPostDTO> searchByTitleContentCategoryOrTags(String term, String categoryName, List<String> tags) {
+        return blogPostRepository.findByTitleContainingOrContentContainingOrCategory_NameContainingOrTags_NameIn(term, term, categoryName, tags).stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }*/
+
 
     @Override
     public List<BlogPostDTO> findByUserId(Long userId) {

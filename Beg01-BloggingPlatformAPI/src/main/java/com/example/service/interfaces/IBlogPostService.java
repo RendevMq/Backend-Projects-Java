@@ -22,5 +22,9 @@ public interface  IBlogPostService {
 
     List<BlogPostDTO> searchByTitleOrContent(String term);
 
+    List<BlogPostDTO> searchByTerm(String term);
+
+
+
     List<BlogPostDTO> findByUserId(Long userId);
 }

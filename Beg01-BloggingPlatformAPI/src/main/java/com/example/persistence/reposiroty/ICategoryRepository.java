@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ICategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
-    // Método para encontrar categoría por nombre
+    // Métodoo para encontrar categoría por nombre
     Optional<CategoryEntity> findByName(String name);
 }

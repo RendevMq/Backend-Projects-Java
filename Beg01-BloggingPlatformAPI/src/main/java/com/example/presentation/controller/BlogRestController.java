@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,11 +26,13 @@ public class BlogRestController {
     }
 
     // 2. Obtener todas las publicaciones del blog
+    // Ademas, para obtener posts por título, contenido, nombre de la categoría o nombres de tags segun el termino
     @GetMapping
     public ResponseEntity<List<BlogPostDTO>> getAllPosts(@RequestParam(value = "term", required = false) String term) {
         List<BlogPostDTO> posts;
         if (term != null && !term.isEmpty()) {
-            posts = blogPostService.searchByTitleOrContent(term);
+            //posts = blogPostService.searchByTitleOrContent(term);
+            posts = blogPostService.searchByTerm(term);
         } else {
             posts = blogPostService.findAll();
         }
@@ -67,5 +68,6 @@ public class BlogRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
 }
 
