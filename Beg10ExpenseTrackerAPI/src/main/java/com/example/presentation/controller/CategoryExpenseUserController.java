@@ -50,6 +50,23 @@ public class CategoryExpenseUserController {
         return ResponseEntity.ok("Categoría eliminada con éxito.");
     }
 
+    // Nuevo: Obtener categorías para un usuario específico (USER)
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/categories/user")
+    public ResponseEntity<List<CategoryDTO>> getUserCategories() {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<CategoryDTO> categories = categoryService.getUserCategories(currentUsername);
+        return ResponseEntity.ok(categories);
+    }
+
+    // Nuevo: Obtener todas las categorías globales y personalizadas de todos los usuarios (ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/categories/admin")
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
+    }
+
     // ========================== OPERACIONES SOBRE GASTOS ============================= //
 
     // Crear gasto: Solo Usuarios

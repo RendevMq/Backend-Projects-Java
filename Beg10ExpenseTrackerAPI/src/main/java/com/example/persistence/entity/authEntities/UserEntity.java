@@ -1,7 +1,7 @@
 package com.example.persistence.entity.authEntities;
 
 import com.example.persistence.entity.CategoryEntity;
-import com.example.persistence.entity.Expense;
+import com.example.persistence.entity.ExpenseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,7 +41,7 @@ public class UserEntity {
     @Column(name = "credential_No_Expired")
     private boolean credentialNoExpired;
 
-    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles" , joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles = new HashSet<>();
 
@@ -51,6 +51,6 @@ public class UserEntity {
 
     // Relación con los gastos, con eliminación en cascada
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<Expense> expenses = new HashSet<>();
+    private Set<ExpenseEntity> expenses = new HashSet<>();
 }
 

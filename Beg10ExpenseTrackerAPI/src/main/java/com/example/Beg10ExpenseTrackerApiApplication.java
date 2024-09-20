@@ -1,5 +1,4 @@
 package com.example;
-
 import com.example.persistence.entity.authEntities.RoleEntity;
 import com.example.persistence.entity.authEntities.RoleEnum;
 import com.example.persistence.entity.authEntities.UserEntity;
@@ -35,25 +34,31 @@ public class Beg10ExpenseTrackerApiApplication {
 			// Guardamos los roles en la base de datos si no existen
 			roleRepository.saveAll(List.of(roleAdmin, roleUser));
 
+			// Recuperamos los roles desde la base de datos después de guardarlos
+			RoleEntity savedRoleAdmin = roleRepository.findByRoleEnum(RoleEnum.ADMIN)
+					.orElseThrow(() -> new RuntimeException("Role ADMIN no encontrado"));
+			RoleEntity savedRoleUser = roleRepository.findByRoleEnum(RoleEnum.USER)
+					.orElseThrow(() -> new RuntimeException("Role USER no encontrado"));
+
 			// 2) Creamos los usuarios
 			UserEntity adminUser = UserEntity.builder()
 					.username("admin")
-					.password(passwordEncoder.encode("admin123"))  // Contraseña encriptada
+					.password(passwordEncoder.encode("admin"))  // Cambiar a una contraseña real
 					.isEnable(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
 					.credentialNoExpired(true)
-					.roles(Set.of(roleAdmin))  // Asignamos rol de ADMIN
+					.roles(Set.of(savedRoleAdmin))  // Asignamos rol de ADMIN
 					.build();
 
 			UserEntity regularUser = UserEntity.builder()
 					.username("user")
-					.password(passwordEncoder.encode("user123"))  // Contraseña encriptada
+					.password(passwordEncoder.encode("user"))  // Cambiar a una contraseña real
 					.isEnable(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
 					.credentialNoExpired(true)
-					.roles(Set.of(roleUser))  // Asignamos rol de USER
+					.roles(Set.of(savedRoleUser))  // Asignamos rol de USER
 					.build();
 
 			// Guardamos los usuarios en la base de datos

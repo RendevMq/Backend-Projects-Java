@@ -4,6 +4,7 @@ import com.example.persistence.entity.CategoryEntity;
 import com.example.persistence.entity.ExpenseEntity;
 import com.example.persistence.entity.authEntities.UserEntity;
 import com.example.persistence.repository.ExpenseRepository;
+import com.example.persistence.repository.UserRepository;
 import com.example.presentation.dto.ExpenseDTO;
 import com.example.presentation.dto.UserDTO;
 import com.example.service.exception.InvalidOperationException;
@@ -12,6 +13,7 @@ import com.example.service.interfaces.IExpenseService;
 import com.example.service.interfaces.IUserService;
 import com.example.util.EntityToDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,21 +28,33 @@ public class ExpenseServiceImpl implements IExpenseService {
     private ExpenseRepository expenseRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private IUserService userService; // Inyectamos el servicio de usuario para verificar el propietario
 
     @Override
     public ExpenseDTO createExpense(ExpenseDTO expenseDTO) {
+        // Obtener el nombre de usuario autenticado desde el contexto de seguridad
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Obtener el usuario desde el repositorio
+        UserEntity userEntity = userRepository.findUserEntityByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", "username", currentUsername));
+
+        // Crear el gasto asociando al usuario autenticado
         ExpenseEntity expenseEntity = ExpenseEntity.builder()
                 .amount(expenseDTO.getAmount())
                 .description(expenseDTO.getDescription())
                 .date(expenseDTO.getDate())
-                .user(UserEntity.builder().id(expenseDTO.getUserId()).build()) // Usamos el builder para UserEntity con el ID
-                .category(CategoryEntity.builder().id(expenseDTO.getCategoryId()).build()) // Usamos el builder para CategoryEntity con el ID
+                .user(userEntity)  // Asignar el usuario autenticado
+                .category(CategoryEntity.builder().id(expenseDTO.getCategoryId()).build())  // Asignar la categoría
                 .build();
 
         ExpenseEntity savedExpense = expenseRepository.save(expenseEntity);
         return EntityToDTOMapper.mapToExpenseDTO(savedExpense);
     }
+
 
     @Override
     public ExpenseDTO updateExpense(Long id, ExpenseDTO expenseDTO) {

@@ -16,9 +16,9 @@ public interface ICategoryService {
     // Eliminar una categoría
     void deleteCategory(Long id);
 
-    // Obtener todas las categorías (globales o personalizadas para un usuario)
-    List<CategoryDTO> getAllCategories(boolean isGlobal, Long userId);
-
+    // Nuevos métodos
+    List<CategoryDTO> getUserCategories(String username);  // Para obtener las categorías de un usuario
+    List<CategoryDTO> getAllCategories();  // Para obtener todas las categorías (administrador)
     // Obtener una categoría por ID
     Optional<CategoryDTO> getCategoryById(Long id);
 }

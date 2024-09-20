@@ -18,4 +18,11 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
 
     // Encontrar todas las categorías personalizadas por usuario
     List<CategoryEntity> findByIsGlobalFalseAndUser_Id(Long userId);
+
+    // Obtener las categorías personalizadas de un usuario
+    List<CategoryEntity> findByUser_Id(Long userId);
+
+    // Opcionalmente, un método para obtener todas las categorías
+    List<CategoryEntity> findAll();
+
 }

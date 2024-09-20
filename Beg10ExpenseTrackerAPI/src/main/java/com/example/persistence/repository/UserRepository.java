@@ -19,4 +19,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     // Verificar si existe un usuario con un email
     boolean existsByEmail(String email);
+
 }

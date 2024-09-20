@@ -3,6 +3,7 @@ package com.example.service.implementation;
 import com.example.persistence.entity.CategoryEntity;
 import com.example.persistence.entity.authEntities.UserEntity;
 import com.example.persistence.repository.CategoryRepository;
+import com.example.persistence.repository.UserRepository;
 import com.example.presentation.dto.CategoryDTO;
 import com.example.presentation.dto.ExpenseDTO;
 import com.example.service.exception.InvalidOperationException;
@@ -11,7 +12,9 @@ import com.example.service.interfaces.ICategoryService;
 import com.example.service.interfaces.IExpenseService;
 import com.example.service.interfaces.IUserService;
 import com.example.util.EntityToDTOMapper;
+import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,24 +33,41 @@ public class CategoryServiceImpl implements ICategoryService {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        if (categoryDTO.isGlobal() && !userService.isAdmin()) {
-            throw new InvalidOperationException("Solo los administradores pueden crear categorías globales.");
+        // Verificar si el usuario autenticado es un administrador
+        boolean isAdmin = userService.isAdmin();
+
+        // Configurar automáticamente el valor de isGlobal en función del rol del usuario
+        if (isAdmin) {
+            categoryDTO.setGlobal(true);  // Los administradores crean categorías globales
+        } else {
+            categoryDTO.setGlobal(false);  // Los usuarios normales crean categorías personalizadas
         }
 
+        // Crear una nueva categoría
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setName(categoryDTO.getName());
         categoryEntity.setGlobal(categoryDTO.isGlobal());
 
-        // Asignar usuario si la categoría no es global
+        // Asignar el usuario si la categoría no es global
         if (!categoryDTO.isGlobal()) {
-            categoryEntity.setUser(UserEntity.builder().id(categoryDTO.getUserId()).build());
+            // Obtener el usuario autenticado desde la base de datos
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            UserEntity userEntity = userRepository.findUserEntityByUsername(currentUsername)
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuario", "username", currentUsername));
+
+            categoryEntity.setUser(userEntity);
         }
 
+        // Guardar la categoría
         CategoryEntity savedCategory = categoryRepository.save(categoryEntity);
         return EntityToDTOMapper.mapToCategoryDTO(savedCategory);
     }
+
 
     @Override
     public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
@@ -88,7 +108,7 @@ public class CategoryServiceImpl implements ICategoryService {
         categoryRepository.delete(categoryEntity);
     }
 
-    @Override
+    /*@Override
     public List<CategoryDTO> getAllCategories(boolean isGlobal, Long userId) {
         List<CategoryEntity> categories;
         if (isGlobal) {
@@ -97,11 +117,38 @@ public class CategoryServiceImpl implements ICategoryService {
             categories = categoryRepository.findByIsGlobalFalseAndUser_Id(userId);
         }
         return categories.stream().map(EntityToDTOMapper::mapToCategoryDTO).collect(Collectors.toList());
-    }
+    }*/
 
     @Override
     public Optional<CategoryDTO> getCategoryById(Long id) {
         return categoryRepository.findById(id).map(EntityToDTOMapper::mapToCategoryDTO);
     }
+
+
+    // Nuevo método para obtener las categorías de un usuario
+    @Override
+    public List<CategoryDTO> getUserCategories(String username) {
+        // Obtener al usuario
+        UserEntity userEntity = userRepository.findUserEntityByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", "username", username));
+
+        // Obtener categorías globales y personalizadas del usuario
+        List<CategoryEntity> categories = categoryRepository.findByIsGlobalTrue();
+        categories.addAll(categoryRepository.findByUser_Id(userEntity.getId()));
+
+        return categories.stream()
+                .map(EntityToDTOMapper::mapToCategoryDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Nuevo métodoo para que el ADMIN obtenga todas las categorías
+    @Override
+    public List<CategoryDTO> getAllCategories() {
+        List<CategoryEntity> categories = categoryRepository.findAll();  // Obtener todas las categorías
+        return categories.stream()
+                .map(EntityToDTOMapper::mapToCategoryDTO)
+                .collect(Collectors.toList());
+    }
+
 
 }
