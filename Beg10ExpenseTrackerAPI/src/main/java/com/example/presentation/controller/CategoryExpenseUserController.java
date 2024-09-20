@@ -11,6 +11,7 @@ import com.example.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -73,6 +74,18 @@ public class CategoryExpenseUserController {
         return ResponseEntity.ok("Gasto eliminado con éxito.");
     }
 
+    // Listar y Filtrar gastos: Solo Usuarios o Administradores
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @GetMapping("/expenses")
+    public ResponseEntity<List<ExpenseDTO>> getExpenses(
+            @RequestParam(required = false) String filter, // Filtro: last_week, last_month, last_3_months
+            @RequestParam(required = false) String startDate, // Fecha inicio para filtro personalizado
+            @RequestParam(required = false) String endDate   // Fecha fin para filtro personalizado
+    ) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<ExpenseDTO> expenses = expenseService.getExpenses(currentUsername, filter, startDate, endDate);
+        return ResponseEntity.ok(expenses);
+    }
     // ========================== GESTIÓN DE USUARIOS (SOLO ADMIN) ============================= //
 
     // Crear usuario: Solo Admin

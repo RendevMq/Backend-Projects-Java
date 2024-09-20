@@ -26,7 +26,7 @@ Para más información sobre el reto, visita el siguiente enlace: [Expense Track
 
 - **Autenticación mediante JWT**: Los usuarios se registran e inician sesión para obtener un token JWT, que se utiliza para autenticar todas las solicitudes posteriores.
 - **Roles**:
-    - `ADMIN`: Tiene permisos para gestionar categorías globales y eliminar usuarios.
+    - `ADMIN`: Tiene permisos para gestionar categorías globales, ver todos los gastos y eliminar usuarios.
     - `USER`: Solo puede gestionar sus propias categorías personalizadas y gastos.
 
 ### 2. Gestión de Categorías
@@ -43,8 +43,17 @@ Para más información sobre el reto, visita el siguiente enlace: [Expense Track
 - **Usuarios (USER)** pueden:
     - Crear, actualizar y eliminar **sus propios gastos**.
     - Asociar gastos a categorías globales o personalizadas.
-    - Filtrar gastos por categoría o por fechas.
+    - Filtrar gastos por categoría o por fechas:
+        - **Filtros disponibles**:
+            - `last_week`: Gastos de la última semana.
+            - `last_month`: Gastos del último mes.
+            - `last_3_months`: Gastos de los últimos tres meses.
+            - `startDate` y `endDate`: Filtrar por un rango de fechas personalizado.
     - No pueden ver ni gestionar los gastos de otros usuarios.
+
+- **Administradores (ADMIN)** pueden:
+    - Ver y filtrar **todos los gastos** de todos los usuarios, aplicando los mismos filtros por fechas:
+        - `last_week`, `last_month`, `last_3_months`, o por rango personalizado (`startDate`, `endDate`).
 
 ### 4. Gestión de Usuarios (Solo para Administradores)
 
@@ -53,7 +62,6 @@ Para más información sobre el reto, visita el siguiente enlace: [Expense Track
     - Al eliminar un usuario, se eliminan todas sus categorías personalizadas y gastos.
 
 ---
-
 ## Flujos de Trabajo
 
 ### Autenticación
@@ -65,34 +73,50 @@ Para más información sobre el reto, visita el siguiente enlace: [Expense Track
 ### Gestión de Categorías
 
 - **Usuarios** pueden:
-    - Crear, actualizar y eliminar **categorías personalizadas** usando los endpoints:
-        - `POST /api/categories/createCustom`
-        - `PUT /api/categories/{id}`
-        - `DELETE /api/categories/{id}` (Solo si no hay gastos asociados)
+    - Crear, actualizar y eliminar **categorías personalizadas**. La lógica interna determina si es personalizada o global basándose en el rol del usuario:
+        - `POST /api/categories`: Crear una categoría personalizada o global (la lógica determina el tipo de categoría).
+        - `PUT /api/categories/{id}`: Actualizar una categoría (Solo si es de su propiedad o si es un administrador para categorías globales).
+        - `DELETE /api/categories/{id}`: Eliminar una categoría (Solo si no hay gastos asociados a la categoría).
 
 - **Administradores** pueden:
-    - Crear, actualizar y eliminar **categorías globales** usando los endpoints:
-        - `POST /api/categories/createGlobal`
-        - `PUT /api/categories/{id}`
-        - `DELETE /api/categories/{id}` (Solo si no hay gastos asociados)
+    - Crear, actualizar y eliminar **categorías globales**. La lógica interna se encarga de determinar el tipo de categoría basado en el rol del usuario:
+        - `POST /api/categories`: Crear una categoría global (ADMIN).
+        - `PUT /api/categories/{id}`: Actualizar una categoría global (ADMIN).
+        - `DELETE /api/categories/{id}`: Eliminar una categoría global (ADMIN, solo si no hay gastos asociados).
 
 ### Gestión de Gastos
 
-1. **Usuarios** pueden:
-    - Crear, actualizar y eliminar **sus propios gastos** en:
-        - `POST /api/expenses`
-        - `PUT /api/expenses/{id}`
-        - `DELETE /api/expenses/{id}`
-    - Asociar gastos a **categorías globales o personalizadas**.
+- **Usuarios** pueden:
+    - Crear, actualizar y eliminar **sus propios gastos** usando los siguientes endpoints:
+        - `POST /api/expenses`: Crear un nuevo gasto.
+        - `PUT /api/expenses/{id}`: Actualizar un gasto existente (Solo si es de su propiedad).
+        - `DELETE /api/expenses/{id}`: Eliminar un gasto (Solo si es de su propiedad).
+    - Asociar gastos a **categorías globales** o **categorías personalizadas** creadas por el usuario.
+    - **Filtrar sus propios gastos** por rango de fechas:
+        - Filtros disponibles:
+            - `last_week`: Gastos de la última semana.
+            - `last_month`: Gastos del último mes.
+            - `last_3_months`: Gastos de los últimos 3 meses.
+            - `startDate` y `endDate`: Filtrar por un rango de fechas personalizado.
+        - Endpoint de filtrado:
+            - `GET /api/expenses?filter=last_week`: Filtrar por la última semana.
+            - `GET /api/expenses?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD`: Filtrar por un rango de fechas personalizado.
+
+- **Administradores** pueden:
+    - Ver **todos los gastos** de todos los usuarios usando el mismo endpoint:
+        - `GET /api/expenses`: Ver y filtrar todos los gastos del sistema.
+        - Aplicar los mismos filtros de fecha que los usuarios:
+            - `last_week`, `last_month`, `last_3_months`, o filtrar por rango personalizado (`startDate` y `endDate`).
 
 ### Gestión de Usuarios (Administradores)
 
 - **Administradores** pueden:
-    - Eliminar usuarios del sistema en:
-        - `DELETE /api/users/{id}`
+    - Eliminar usuarios del sistema usando el siguiente endpoint:
+        - `DELETE /api/users/{id}`: Eliminar un usuario y todos sus datos asociados, incluyendo categorías personalizadas y gastos.
+
+
 
 ---
-
 ## Endpoints
 
 ### Autenticación
@@ -102,20 +126,27 @@ Para más información sobre el reto, visita el siguiente enlace: [Expense Track
 
 ### Categorías
 
-- `POST /api/categories/createGlobal`: Crear una categoría global (ADMIN).
-- `POST /api/categories/createCustom`: Crear una categoría personalizada (USER).
-- `PUT /api/categories/{id}`: Actualizar una categoría (ADMIN/USER).
-- `DELETE /api/categories/{id}`: Eliminar una categoría (ADMIN/USER).
+- `POST /api/categories`: Crear una categoría. La lógica interna decidirá si es global (ADMIN) o personalizada (USER).
+- `PUT /api/categories/{id}`: Actualizar una categoría (ADMIN/USER). Solo los usuarios pueden actualizar sus categorías personalizadas y los administradores las categorías globales.
+- `DELETE /api/categories/{id}`: Eliminar una categoría (ADMIN/USER). Solo se puede eliminar si no hay gastos asociados a la categoría.
 
 ### Gastos
 
 - `POST /api/expenses`: Crear un nuevo gasto (USER).
-- `PUT /api/expenses/{id}`: Actualizar un gasto (USER).
-- `DELETE /api/expenses/{id}`: Eliminar un gasto (USER).
+- `PUT /api/expenses/{id}`: Actualizar un gasto (USER). Solo el propietario del gasto puede actualizarlo.
+- `DELETE /api/expenses/{id}`: Eliminar un gasto (USER). Solo el propietario del gasto puede eliminarlo.
+- `GET /api/expenses`: Listar y filtrar gastos:
+    - **Usuarios**: Solo pueden ver y filtrar sus propios gastos.
+    - **Administradores**: Pueden ver y filtrar los gastos de todos los usuarios.
+    - Filtros disponibles:
+        - `filter=last_week`: Gastos de la última semana.
+        - `filter=last_month`: Gastos del último mes.
+        - `filter=last_3_months`: Gastos de los últimos tres meses.
+        - `startDate=YYYY-MM-DD&endDate=YYYY-MM-DD`: Filtrar por un rango de fechas personalizado.
 
 ### Usuarios
 
-- `DELETE /api/users/{id}`: Eliminar un usuario (ADMIN).
+- `DELETE /api/users/{id}`: Eliminar un usuario (ADMIN). Esto eliminará todas las categorías personalizadas y gastos asociados al usuario.
 
 ---
 

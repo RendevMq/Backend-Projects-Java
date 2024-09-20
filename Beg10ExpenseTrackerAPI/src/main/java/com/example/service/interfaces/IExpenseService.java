@@ -25,4 +25,6 @@ public interface IExpenseService {
 
     // Obtener un gasto por ID
     Optional<ExpenseDTO> getExpenseById(Long id);
+
+    List<ExpenseDTO> getExpenses(String username, String filter, String startDate, String endDate);
 }
