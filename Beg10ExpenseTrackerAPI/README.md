@@ -2,11 +2,12 @@
 
 Este es un sistema de gestión de gastos que permite a los usuarios registrar, organizar y visualizar sus gastos. La aplicación incluye roles diferenciados para **usuarios** y **administradores**, y utiliza **JWT** para autenticar a los usuarios y autorizar sus acciones.
 
-# Sistema de Gestión de Gastos
-
 <p align="center">
   <img src="images/reto.png" alt="reto" width="800"/>
 </p>
+
+## Reto
+Para más información sobre el reto, visita el siguiente enlace: [Expense Tracker API Challenge](https://roadmap.sh/projects/expense-tracker-api)
 
 ## Tecnologías Utilizadas
 

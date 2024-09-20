@@ -2,6 +2,11 @@
 
 Este proyecto es una API RESTful que permite gestionar publicaciones de blog personales mediante operaciones CRUD (Crear, Leer, Actualizar, Eliminar). La plataforma permite crear publicaciones, actualizarlas, eliminarlas, obtener publicaciones individuales o todas las publicaciones, y realizar búsquedas mediante un término específico.
 
+<p align="center">
+  <img src="images/reto.png" alt="reto" width="800"/>
+</p>
+
+
 ## Reto
 Para más información sobre el reto, visita el siguiente enlace: [Blogging Platform API Challenge](https://roadmap.sh/projects/blogging-platform-api)
 
