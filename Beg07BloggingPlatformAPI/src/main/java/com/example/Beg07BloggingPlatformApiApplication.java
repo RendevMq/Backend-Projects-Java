@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Set;
 
 @SpringBootApplication
-public class Beg01BloggingPlatformApiApplication {
+public class Beg07BloggingPlatformApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Beg01BloggingPlatformApiApplication.class, args);
+		SpringApplication.run(Beg07BloggingPlatformApiApplication.class, args);
 	}
 
 	@Bean
