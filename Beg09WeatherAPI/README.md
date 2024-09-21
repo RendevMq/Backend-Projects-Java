@@ -95,7 +95,8 @@ La API estará disponible en `http://localhost:8080`.
 
 - **Ejemplo de solicitud:**
 ```
-GET http://localhost:8080/weather/QUITO
+GET http://localhost:8080/weather/lima
+
 ```
 
 - **Ejemplo de respuesta:**
@@ -103,25 +104,26 @@ GET http://localhost:8080/weather/QUITO
 ```bash
 {
     "queryCost": 1,
-    "latitude": -0.20562,
-    "longitude": -78.5088,
-    "resolvedAddress": "Quito, Pichincha, Ecuador",
-    "timezone": "America/Guayaquil",
+    "latitude": -12.0464,
+    "longitude": -77.0428,
+    "resolvedAddress": "Lima, Lima, Peru",
+    "timezone": "America/Lima",
     "currentConditions": {
         "datetime": "2024-09-21T03:00:00",
-        "temp": 49.4,
-        "feelslike": 49.4,
-        "humidity": 93.8,
+        "temp": 61.0,
+        "feelslike": 61.0,
+        "humidity": 84.0,
         "precip": 0.0,
         "conditions": "Partially cloudy",
         "windgust": 0.0,
-        "windspeed": 3.0,
-        "winddir": 73.0,
-        "pressure": 1025.0,
-        "visibility": 6.2,
-        "cloudcover": 88.0
+        "windspeed": 5.0,
+        "winddir": 180.0,
+        "pressure": 1015.0,
+        "visibility": 10.0,
+        "cloudcover": 70.0
     }
 }
+
 ```
 ### Gestión de errores:
 - Si el límite de solicitudes es superado, la API devuelve un estado `429 Too Many Requests` con un mensaje de error.
