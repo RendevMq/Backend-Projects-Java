@@ -28,7 +28,8 @@ Este repositorio incluye soluciones basadas en las siguientes tecnologías:
 
 ## ⌨️ Proyectos de Backend con Java
 
-<div align="center">
+Proyectos completados hasta el momento. A medida que avance, iré añadiendo más retos y soluciones. ツ
+
 
 | Número | Proyecto | Código |
 | --- | --- | --- |
@@ -37,6 +38,6 @@ Este repositorio incluye soluciones basadas en las siguientes tecnologías:
 | `09` | Weather API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg09WeatherAPI) |
 | `10` | Expense Tracker API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg10ExpenseTrackerAPI) |
 
-</div>
+
 
 
