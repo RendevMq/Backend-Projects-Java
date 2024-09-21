@@ -1,4 +1,4 @@
-# Sistema de Gestión de Gastos
+# Expense Tracker API 
 
 Este es un sistema de gestión de gastos que permite a los usuarios registrar, organizar y visualizar sus gastos. La aplicación incluye roles diferenciados para **usuarios** y **administradores**, y utiliza **JWT** para autenticar a los usuarios y autorizar sus acciones.
 
