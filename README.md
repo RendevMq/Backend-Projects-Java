@@ -1,6 +1,6 @@
 # Reto Backend Java ♨️ - Proyectos de Roadmap.sh
 
-Este repositorio contiene la implementación de diversos proyectos y retos propuestos por [roadmap.sh](https://roadmap.sh/backend/projects). El objetivo de este repositorio es proporcionar soluciones a problemas reales y desafíos de backend, utilizando diversas tecnologías y buenas prácticas de desarrollo.
+Este repositorio contiene la implementación de diversos proyectos y retos propuestos por [roadmap.sh](https://roadmap.sh/backend/projects). **La idea es ir completando progresivamente cada uno de los proyectos, desde los niveles más básicos hasta llegar a los proyectos avanzados.** El objetivo es proporcionar soluciones a problemas reales y desafíos del desarrollo backend, utilizando una amplia variedad de tecnologías y aplicando buenas prácticas de desarrollo. 
 
 <p align="center">
   <img src="img.png" alt="reto" width="800"/>
@@ -28,11 +28,15 @@ Este repositorio incluye soluciones basadas en las siguientes tecnologías:
 
 ## ⌨️ Proyectos de Backend con Java
 
+<div align="center">
+
 | Número | Proyecto | Código |
 | --- | --- | --- |
 | `07` | Blogging Platform API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg07BloggingPlatformAPI) |
 | `08` | To-Do List API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg08TodoListAPI) |
 | `09` | Weather API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg09WeatherAPI) |
 | `10` | Expense Tracker API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg10ExpenseTrackerAPI) |
+
+</div>
 
 
