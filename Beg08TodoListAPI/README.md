@@ -46,6 +46,26 @@ Para más información sobre el reto, visita el siguiente enlace: [Todo List API
     ```bash
     mvn spring-boot:run
     ```
+## Autenticación con JWT
+
+Este proyecto utiliza **JSON Web Tokens (JWT)** para la autenticación y autorización de usuarios. JWT permite gestionar sesiones de manera segura sin necesidad de almacenar información del estado del usuario en el servidor. Cada vez que un usuario se autentica correctamente, se genera un **token JWT**, que luego es enviado en las solicitudes subsecuentes para verificar la identidad del usuario.
+
+### Proceso de Autenticación
+
+1. **Registro del Usuario**:
+  - Un nuevo usuario se registra a través del endpoint `/auth/sign-up`, proporcionando su nombre, email y contraseña.
+  - Tras un registro exitoso, el servidor responde con un **token JWT**.
+
+2. **Inicio de Sesión**:
+  - El usuario puede iniciar sesión a través del endpoint `/auth/log-in`, proporcionando su email y contraseña.
+  - Si las credenciales son correctas, el servidor genera y responde con un **token JWT**.
+
+3. **Uso del Token JWT**:
+  - Una vez que el usuario recibe el token, debe incluirlo en el encabezado `Authorization` de todas las solicitudes protegidas de la siguiente manera:
+    ```bash
+    Authorization: Bearer <token>
+    ```
+  - El token es verificado por el servidor en cada solicitud para asegurarse de que el usuario esté autenticado.
 
 ## Endpoints
 
@@ -229,11 +249,5 @@ Para más información sobre el reto, visita el siguiente enlace: [Todo List API
     }
     ```
 
-## Autenticación
-
-El sistema utiliza **JWT (JSON Web Tokens)** para autenticar a los usuarios. Después de iniciar sesión o registrarse, se te devolverá un token JWT, que debes incluir en el encabezado de autorización para todas las solicitudes a los endpoints protegidos (tareas).
-
-### Ejemplo de Encabezado de Autorización
-
-```plaintext
-Authorization: Bearer <TOKEN>
+### Pruebas
+Usa Postman o cualquier cliente HTTP para probar los endpoints de la API.
