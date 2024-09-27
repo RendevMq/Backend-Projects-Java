@@ -1,7 +1,13 @@
 # URL Shortener API
 
-Este proyecto es una API RESTful desarrollada con **Spring Boot**, que permite acortar URLs largas, redirigir a las URLs originales y proporcionar estadísticas sobre cuántas veces se ha accedido a cada URL corta. También incluye integración con **Redis** para el manejo eficiente de conteo de accesos y **PostgreSQL** para el almacenamiento de datos.
+Este proyecto es una API RESTful desarrollada con Spring Boot, que permite acortar URLs largas, redirigir a las URLs originales y proporcionar estadísticas sobre cuántas veces se ha accedido a cada URL corta. La API integra Redis para dos funciones principales: almacenamiento en caché de las URLs acortadas y manejo eficiente del conteo de accesos. Además, se utiliza PostgreSQL como base de datos relacional para el almacenamiento persistente de los datos.
 
+<p align="center">
+  <img src="images/reto.png" alt="reto" width="800"/>
+</p>
+
+## Reto
+Para más información sobre el reto, visita el siguiente enlace: [URL Shortening Service Challenge](https://roadmap.sh/projects/url-shortening-service)
 ## Características principales
 - Crear una URL corta a partir de una URL larga.
 - Redirigir a la URL original utilizando la URL corta.
@@ -16,6 +22,7 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot**, que permite a
 - **Redis** (para cachear y gestionar el contador de accesos)
 - **Lombok** (para reducir código repetitivo)
 - **Maven** (para la gestión de dependencias)
+- **Docker Compose** (para ejecutar PostgreSQL y Redis con Docker)
 
 ## Requisitos previos
 
@@ -79,7 +86,7 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot**, que permite a
 
 3. Obtener estadísticas de una URL corta
     - **Método:** `GET`
-    - **URL:** `/shorten/{shortCode}`
+    - **URL:** `/shorten/{shortCode}/stats`
     ```json
     {
         "shortCode": "abc123",
@@ -87,10 +94,16 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot**, que permite a
         "originalUrl": "https://www.example.com",
         "createdAt": "2024-09-26 15:30:00"
     }
-
    ```
 
+4. Eliminar una URL corta
+    - **Método:** `DELETE`
+    - **URL:** `/shorten/{shortCode}`
+   
+    Respuesta exitosa: 204 No Content
 
+## Pruebas
+Usa Postman o cualquier cliente HTTP para probar los endpoints de la API.
 
 
 
