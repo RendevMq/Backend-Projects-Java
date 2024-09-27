@@ -7,7 +7,11 @@ import com.example.presentation.dto.UrlResponseDTO;
 import com.example.presentation.dto.UrlStatsDTO;
 import com.example.service.interfaces.URLShorteningService;
 import com.example.service.exception.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,6 +22,8 @@ import java.util.UUID;
 
 @Service
 public class URLShorteningServiceImpl implements URLShorteningService {
+
+    private static final Logger logger = LoggerFactory.getLogger(URLShorteningServiceImpl.class);
 
     private static final String URL_ACCESS_COUNT_KEY = "url_access_count:";
 
@@ -33,10 +39,22 @@ public class URLShorteningServiceImpl implements URLShorteningService {
     @Override
     @Transactional
     public UrlResponseDTO createShortUrl(UrlRequestDTO urlRequestDTO) {
-        // Generar un código corto único
+        // Verificar si la URL ya ha sido acortada
+        Optional<ShortenedUrl> existingUrl = urlRepository.findByOriginalUrl(urlRequestDTO.getOriginalUrl());
+        if (existingUrl.isPresent()) {
+            ShortenedUrl shortenedUrl = existingUrl.get();
+            // Devolver el código corto existente
+            return UrlResponseDTO.builder()
+                    .originalUrl(shortenedUrl.getOriginalUrl())
+                    .shortCode(shortenedUrl.getShortCode())
+                    .shortUrl("http://localhost:8080/shorten/" + shortenedUrl.getShortCode())
+                    .createdAt(shortenedUrl.getCreatedAt().format(formatter))
+                    .build();
+        }
+
+        // Si no existe, generar un nuevo código corto
         String shortCode = generateUniqueShortCode();
 
-        // Crear una nueva entidad ShortenedUrl
         ShortenedUrl shortenedUrl = ShortenedUrl.builder()
                 .originalUrl(urlRequestDTO.getOriginalUrl())
                 .shortCode(shortCode)
@@ -45,7 +63,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
         // Guardar en la base de datos
         ShortenedUrl savedUrl = urlRepository.save(shortenedUrl);
 
-        // Devolver la respuesta
+        // Devolver la respuesta con la nueva URL corta
         return UrlResponseDTO.builder()
                 .originalUrl(savedUrl.getOriginalUrl())
                 .shortCode(savedUrl.getShortCode())
@@ -54,7 +72,9 @@ public class URLShorteningServiceImpl implements URLShorteningService {
                 .build();
     }
 
+
     @Override
+    @Cacheable(value = "shortUrlCache", key = "#shortCode") // Cachear el resultado de getOriginalUrl
     public UrlResponseDTO getOriginalUrl(String shortCode) {
         // Buscar en la base de datos por el código corto
         ShortenedUrl shortenedUrl = urlRepository.findByShortCode(shortCode)
@@ -62,6 +82,8 @@ public class URLShorteningServiceImpl implements URLShorteningService {
 
         // Incrementar el contador de accesos en Redis
         redisTemplate.opsForValue().increment(URL_ACCESS_COUNT_KEY + shortCode);
+
+        logger.info("Se encontró la URL original para el shortCode: {}", shortCode); // Solo se tiene que ver la primera vez
 
         // Devolver la respuesta
         return UrlResponseDTO.builder()
@@ -74,6 +96,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "shortUrlCache", key = "#shortCode") // Limpiar el caché cuando se elimine una URL
     public void deleteShortUrl(String shortCode) {
         // Eliminar la URL corta de la base de datos
         Optional<ShortenedUrl> shortenedUrl = urlRepository.findByShortCode(shortCode);
@@ -94,8 +117,14 @@ public class URLShorteningServiceImpl implements URLShorteningService {
                 .orElseThrow(() -> new ResourceNotFoundException("Short URL not found"));
 
         // Obtener el número de accesos desde Redis
-        Long accessCount = (Long) redisTemplate.opsForValue().get(URL_ACCESS_COUNT_KEY + shortCode);
-        accessCount = accessCount != null ? accessCount : 0;
+        Object accessCountObj = redisTemplate.opsForValue().get(URL_ACCESS_COUNT_KEY + shortCode);
+        // Manejar tanto Integer como Long
+        Long accessCount = 0L;
+        if (accessCountObj instanceof Integer) {
+            accessCount = ((Integer) accessCountObj).longValue();
+        } else if (accessCountObj instanceof Long) {
+            accessCount = (Long) accessCountObj;
+        }
 
         // Devolver las estadísticas
         return UrlStatsDTO.builder()
@@ -111,4 +140,5 @@ public class URLShorteningServiceImpl implements URLShorteningService {
         // Puedes usar UUID o cualquier otra lógica para generar códigos únicos
         return UUID.randomUUID().toString().substring(0, 6);
     }
+
 }

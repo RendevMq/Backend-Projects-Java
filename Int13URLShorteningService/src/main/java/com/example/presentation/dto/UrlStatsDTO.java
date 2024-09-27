@@ -1,18 +1,22 @@
 package com.example.presentation.dto;
 
+//Para devolver estadísticas de la URL
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UrlResponseDTO {
+public class UrlStatsDTO implements Serializable {
 
-    private String originalUrl;
     private String shortCode;
-    private String shortUrl;  // Ejemplo: http://localhost:8080/{shortCode}
+    private Long accessCount;
+    private String originalUrl;
     private String createdAt;
 }

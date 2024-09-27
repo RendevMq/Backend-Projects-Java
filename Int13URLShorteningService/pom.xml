@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Int03URLShorteningService</artifactId>
+	<artifactId>Int13URLShorteningService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Int03URLShorteningService</name>
+	<name>Int13URLShorteningService</name>
 	<description>URL Shortening Service</description>
 	<url/>
 	<licenses>

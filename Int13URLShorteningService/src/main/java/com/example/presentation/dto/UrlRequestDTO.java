@@ -6,10 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UrlRequestDTO {
+public class UrlRequestDTO implements Serializable {
 
     @NotEmpty(message = "URL cannot be empty")
     @Pattern(regexp = "^(http|https)://.*$", message = "URL must be valid")

@@ -17,4 +17,6 @@ public interface URLShorteningService {
 
     // Obtiene las estadísticas de una URL corta (número de accesos)
     UrlStatsDTO getUrlStats(String shortCode);
+
+
 }

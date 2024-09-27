@@ -10,9 +10,14 @@ import java.util.Optional;
 @Repository
 public interface URLRepository extends JpaRepository<ShortenedUrl, Long> {
 
+
+
     // Encuentra una URL acortada por su código corto
     Optional<ShortenedUrl> findByShortCode(String shortCode);
 
     // Elimina una URL acortada por su código corto
     void deleteByShortCode(String shortCode);
+
+    // Encuentra una URL acortada por su URL original
+    Optional<ShortenedUrl> findByOriginalUrl(String originalUrl);
 }
