@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Int01CachingProxy</artifactId>
+	<artifactId>Int11CachingProxy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Int01CachingProxy</name>
+	<name>Int11CachingProxy</name>
 	<description>Caching Proxy</description>
 	<url/>
 	<licenses>

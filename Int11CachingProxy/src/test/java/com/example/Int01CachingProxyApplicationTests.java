@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Int01CachingProxyApplicationTests {
+class Int11CachingProxyApplicationTests {
 
 	@Test
 	void contextLoads() {
