@@ -37,6 +37,8 @@ Proyectos completados hasta el momento. A medida que avance, iré añadiendo má
 | `08` | To-Do List API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg08TodoListAPI) |
 | `09` | Weather API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg09WeatherAPI) |
 | `10` | Expense Tracker API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Beg10ExpenseTrackerAPI) |
+| `11` | Caching Proxy | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Int11CachingProxy) |
+| `13` | URL Shortener API | [Ver](https://github.com/RendevMq/Backend-Projects-Java/tree/main/Int13URLShorteningService) |
 
 
 
