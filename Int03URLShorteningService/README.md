@@ -76,10 +76,19 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot**, que permite a
 
     Respuesta exitosa: `301 Moved Permanently.`
 
+
 3. Obtener estadísticas de una URL corta
     - **Método:** `GET`
     - **URL:** `/shorten/{shortCode}`
+    ```json
+    {
+        "shortCode": "abc123",
+        "accessCount": 10,
+        "originalUrl": "https://www.example.com",
+        "createdAt": "2024-09-26 15:30:00"
+    }
 
+   ```
 
 
 
