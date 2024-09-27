@@ -68,13 +68,17 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot**, que permite a
         "createdAt": "2024-09-26 15:30:00"
     }
    ```
-2Redirigir a la URL original
+2. Redirigir a la URL original
     - **Método:** `GET`
-    - **URL:** `/shorten`
-    - **Body:**
+    - **URL:** `/shorten/{shortCode}`
+   
+    Si el código corto es válido, se redirigirá a la URL original.
 
+    Respuesta exitosa: `301 Moved Permanently.`
 
-
+3. Obtener estadísticas de una URL corta
+    - **Método:** `GET`
+    - **URL:** `/shorten/{shortCode}`
 
 
 
