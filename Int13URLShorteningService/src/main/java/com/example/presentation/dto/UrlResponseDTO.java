@@ -17,4 +17,5 @@ public class UrlResponseDTO implements Serializable {
     private String shortCode;
     private String shortUrl;  // Ejemplo: http://localhost:8080/{shortCode}
     private String createdAt;
+    private Long accessCount;
 }

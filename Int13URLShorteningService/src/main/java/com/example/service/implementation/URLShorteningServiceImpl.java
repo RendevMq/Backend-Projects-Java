@@ -74,16 +74,11 @@ public class URLShorteningServiceImpl implements URLShorteningService {
                 .build();
     }
 
-
-    @Override
     @Cacheable(value = "shortUrlCache", key = "#shortCode") // Cachear el resultado de getOriginalUrl
-    public UrlResponseDTO getOriginalUrl(String shortCode) {
+    public UrlResponseDTO getOriginalUrlWithoutIncrement(String shortCode) {
         // Buscar en la base de datos por el código corto
         ShortenedUrl shortenedUrl = urlRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new ResourceNotFoundException("Short URL not found"));
-
-        // Incrementar el contador de accesos en Redis
-        redisTemplate.opsForValue().increment(URL_ACCESS_COUNT_KEY + shortCode);
 
         logger.info("Se encontró la URL original para el shortCode: {}", shortCode); // Solo se tiene que ver la primera vez
 
@@ -97,18 +92,44 @@ public class URLShorteningServiceImpl implements URLShorteningService {
     }
 
     @Override
+    public UrlResponseDTO getOriginalUrl(String shortCode) {
+        // Siempre incrementar el contador, aunque el resultado esté cacheado
+        redisTemplate.opsForValue().increment(URL_ACCESS_COUNT_KEY + shortCode);
+
+        // Luego obtener la URL, ya sea desde la base de datos o desde el caché
+        return getOriginalUrlWithoutIncrement(shortCode);
+    }
+
+
+
+    @Override
     public List<UrlResponseDTO> getAllUrls() {
         // Recuperar la lista de URLs acortadas
         List<ShortenedUrl> shortenedUrlList = urlRepository.findAll();
 
-        // Convertir a la lista de UrlResponseDTOs
-        List<UrlResponseDTO> urlResponseDTOList = shortenedUrlList.stream()
-                .map(url -> UrlResponseDTO.builder()
-                        .originalUrl(url.getOriginalUrl())
-                        .shortCode(url.getShortCode())
-                        .createdAt(url.getCreatedAt().toString())
-                        .build())
-                .toList();
+        // Convertir a la lista de UrlResponseDTOs con el número de accesos , tmb se puede con streams
+        List<UrlResponseDTO> urlResponseDTOList = new ArrayList<>();
+        for (ShortenedUrl url : shortenedUrlList) {
+            // Obtener el número de accesos desde Redis
+            Object accessCountObj = redisTemplate.opsForValue().get(URL_ACCESS_COUNT_KEY + url.getShortCode());
+            Long accessCount = 0L;
+            if (accessCountObj instanceof Integer) {
+                accessCount = ((Integer) accessCountObj).longValue();
+            } else if (accessCountObj instanceof Long) {
+                accessCount = (Long) accessCountObj;
+            }
+
+            // Agregar la URL a la lista de respuesta con el número de accesos
+            UrlResponseDTO urlResponseDTO = UrlResponseDTO.builder()
+                    .originalUrl(url.getOriginalUrl())
+                    .shortCode(url.getShortCode())
+                    .shortUrl("http://localhost:8080/shorten/" + url.getShortCode())
+                    .createdAt(url.getCreatedAt().format(formatter))
+                    .accessCount(accessCount)  // Añadir el número de accesos
+                    .build();
+
+            urlResponseDTOList.add(urlResponseDTO);
+        }
         return urlResponseDTOList;
     }
 
