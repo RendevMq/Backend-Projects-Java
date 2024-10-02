@@ -37,4 +37,8 @@ public class URLShorteningController {
                 .header(HttpHeaders.LOCATION, response.getOriginalUrl())
                 .build();
     }
+    @GetMapping("/findAll")
+    public ResponseEntity<?>  findAll(){
+        return ResponseEntity.ok(urlShorteningService.getAllUrls());
+    }
 }

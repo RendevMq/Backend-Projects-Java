@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,6 +94,22 @@ public class URLShorteningServiceImpl implements URLShorteningService {
                 .shortUrl("http://localhost:8080/" + shortenedUrl.getShortCode())
                 .createdAt(shortenedUrl.getCreatedAt().format(formatter))
                 .build();
+    }
+
+    @Override
+    public List<UrlResponseDTO> getAllUrls() {
+        // Recuperar la lista de URLs acortadas
+        List<ShortenedUrl> shortenedUrlList = urlRepository.findAll();
+
+        // Convertir a la lista de UrlResponseDTOs
+        List<UrlResponseDTO> urlResponseDTOList = shortenedUrlList.stream()
+                .map(url -> UrlResponseDTO.builder()
+                        .originalUrl(url.getOriginalUrl())
+                        .shortCode(url.getShortCode())
+                        .createdAt(url.getCreatedAt().toString())
+                        .build())
+                .toList();
+        return urlResponseDTOList;
     }
 
     @Override
