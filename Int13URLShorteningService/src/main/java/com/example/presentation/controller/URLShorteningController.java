@@ -26,17 +26,24 @@ public class URLShorteningController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // Redirigir desde una URL corta a la URL original
     @GetMapping("/{shortCode}")
     public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortCode) {
         // Buscar la URL original a partir del código corto
         UrlResponseDTO response = urlShorteningService.getOriginalUrl(shortCode);
 
+        // Desactivar el caché en la respuesta
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        headers.add("Location", response.getOriginalUrl());
+
         // Redirigir a la URL original
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
-                .header(HttpHeaders.LOCATION, response.getOriginalUrl())
+                .headers(headers)
                 .build();
     }
+
     @GetMapping("/findAll")
     public ResponseEntity<?>  findAll(){
         return ResponseEntity.ok(urlShorteningService.getAllUrls());

@@ -74,13 +74,22 @@ public class URLShorteningServiceImpl implements URLShorteningService {
                 .build();
     }
 
+    @Override
+    public UrlResponseDTO getOriginalUrl(String shortCode) {
+        // Siempre incrementar el contador, aunque el resultado esté cacheado
+        redisTemplate.opsForValue().increment(URL_ACCESS_COUNT_KEY + shortCode);
+
+        // Luego obtener la URL, ya sea desde la base de datos o desde el caché
+        return getOriginalUrlWithoutIncrement(shortCode);
+    }
+
     @Cacheable(value = "shortUrlCache", key = "#shortCode") // Cachear el resultado de getOriginalUrl
     public UrlResponseDTO getOriginalUrlWithoutIncrement(String shortCode) {
         // Buscar en la base de datos por el código corto
         ShortenedUrl shortenedUrl = urlRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new ResourceNotFoundException("Short URL not found"));
 
-        logger.info("Se encontró la URL original para el shortCode: {}", shortCode); // Solo se tiene que ver la primera vez
+        logger.info("Se encontró la URL original para el shortCode: {}", shortenedUrl); // Solo se tiene que ver la primera vez
 
         // Devolver la respuesta
         return UrlResponseDTO.builder()
@@ -91,15 +100,29 @@ public class URLShorteningServiceImpl implements URLShorteningService {
                 .build();
     }
 
+    /*
     @Override
+    @Cacheable(value = "shortUrlCache", key = "#shortCode") // Cachear el resultado de getOriginalUrl
     public UrlResponseDTO getOriginalUrl(String shortCode) {
+
+        // Buscar en la base de datos por el código corto
+        ShortenedUrl shortenedUrl = urlRepository.findByShortCode(shortCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Short URL not found"));
+
+        logger.info("Se encontró la URL original para el shortCode: {}", shortCode); // Solo se tiene que ver la primera vez
+
+
         // Siempre incrementar el contador, aunque el resultado esté cacheado
         redisTemplate.opsForValue().increment(URL_ACCESS_COUNT_KEY + shortCode);
 
-        // Luego obtener la URL, ya sea desde la base de datos o desde el caché
-        return getOriginalUrlWithoutIncrement(shortCode);
-    }
-
+        // Devolver la respuesta
+        return UrlResponseDTO.builder()
+                .originalUrl(shortenedUrl.getOriginalUrl())
+                .shortCode(shortenedUrl.getShortCode())
+                .shortUrl("http://localhost:8080/" + shortenedUrl.getShortCode())
+                .createdAt(shortenedUrl.getCreatedAt().format(formatter))
+                .build();
+    }*/
 
 
     @Override
