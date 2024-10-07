@@ -8,10 +8,7 @@ Se implementó con un FrontEnd para que de esta forma se pruebe la funcionalidad
 
 ## Video Demo
 
-<video width="800" controls>
-  <source src="images/demostracion_1.mp4" type="video/mp4">
-  Tu navegador no soporta el video.
-</video>
+https://github.com/user-attachments/assets/b731e88e-9776-4270-9911-ef4323c2c4b3
 
 ## Reto
 Para más información sobre el reto, visita el siguiente enlace: [URL Shortening Service Challenge](https://roadmap.sh/projects/url-shortening-service)
