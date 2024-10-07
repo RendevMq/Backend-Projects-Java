@@ -9,7 +9,7 @@ Se implementó con un FrontEnd para que de esta forma se pruebe la funcionalidad
 ## Video Demo
 
 <video width="800" controls>
-  <source src="images/demostracion.mp4" type="video/mp4">
+  <source src="images/demostracion_1.mp4" type="video/mp4">
   Tu navegador no soporta el video.
 </video>
 
