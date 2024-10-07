@@ -2,16 +2,28 @@
 
 Este proyecto es una API RESTful desarrollada con Spring Boot, que permite acortar URLs largas, redirigir a las URLs originales y proporcionar estadísticas sobre cuántas veces se ha accedido a cada URL corta. La API integra Redis para dos funciones principales: almacenamiento en caché de las URLs acortadas y manejo eficiente del conteo de accesos. Además, se utiliza PostgreSQL como base de datos relacional para el almacenamiento persistente de los datos.
 
-<p align="center">
-  <img src="images/reto.png" alt="reto" width="800"/>
-</p>
+## Implementación con un FrontEnd
+Se implementó con un FrontEnd para que de esta forma se pruebe la funcionalidad de todos los endpoints que ofrece el Backend.
+- Código Front : [Frontend](https://roadmap.sh/projects/url-shortening-service)
+
+## Video Demo
+
+<video width="800" controls>
+  <source src="images/demostracion.mp4" type="video/mp4">
+  Tu navegador no soporta el video.
+</video>
 
 ## Reto
 Para más información sobre el reto, visita el siguiente enlace: [URL Shortening Service Challenge](https://roadmap.sh/projects/url-shortening-service)
 
-## Implementación con un FrontEnd
-Se implementó con un FrontEnd para que de esta forma se pruebe la funcionalidad de todos los endpoints que ofrece el Backend.
-- Código Front : [Frontend](https://roadmap.sh/projects/url-shortening-service)
+<p align="center">
+  <img src="images/reto.png" alt="reto" width="800"/>
+</p>
+
+
+
+
+
 
 ## Características principales
 - Crear una URL corta a partir de una URL larga.

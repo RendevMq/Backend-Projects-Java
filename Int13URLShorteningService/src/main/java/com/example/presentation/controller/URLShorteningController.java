@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/shorten")
+//@RequestMapping("/shorten")
 public class URLShorteningController {
 
     @Autowired

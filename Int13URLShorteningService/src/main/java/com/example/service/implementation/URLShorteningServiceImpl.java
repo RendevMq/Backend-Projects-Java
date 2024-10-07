@@ -10,6 +10,7 @@ import com.example.service.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class URLShorteningServiceImpl implements URLShorteningService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Value("${spring.url.back}")
+    private String baseUrl;
+
     // Formato de fecha
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -49,7 +53,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
             return UrlResponseDTO.builder()
                     .originalUrl(shortenedUrl.getOriginalUrl())
                     .shortCode(shortenedUrl.getShortCode())
-                    .shortUrl("http://localhost:8080/shorten/" + shortenedUrl.getShortCode())
+                    .shortUrl(baseUrl + shortenedUrl.getShortCode())
                     .createdAt(shortenedUrl.getCreatedAt().format(formatter))
                     .build();
         }
@@ -69,7 +73,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
         return UrlResponseDTO.builder()
                 .originalUrl(savedUrl.getOriginalUrl())
                 .shortCode(savedUrl.getShortCode())
-                .shortUrl("http://localhost:8080/shorten/" + savedUrl.getShortCode())
+                .shortUrl(baseUrl + savedUrl.getShortCode())
                 .createdAt(savedUrl.getCreatedAt().format(formatter))
                 .build();
     }
@@ -95,7 +99,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
         return UrlResponseDTO.builder()
                 .originalUrl(shortenedUrl.getOriginalUrl())
                 .shortCode(shortenedUrl.getShortCode())
-                .shortUrl("http://localhost:8080/" + shortenedUrl.getShortCode())
+                .shortUrl(baseUrl + shortenedUrl.getShortCode())
                 .createdAt(shortenedUrl.getCreatedAt().format(formatter))
                 .build();
     }
@@ -119,7 +123,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
         return UrlResponseDTO.builder()
                 .originalUrl(shortenedUrl.getOriginalUrl())
                 .shortCode(shortenedUrl.getShortCode())
-                .shortUrl("http://localhost:8080/" + shortenedUrl.getShortCode())
+                .shortUrl(baseUrl + shortenedUrl.getShortCode())
                 .createdAt(shortenedUrl.getCreatedAt().format(formatter))
                 .build();
     }*/
@@ -146,7 +150,7 @@ public class URLShorteningServiceImpl implements URLShorteningService {
             UrlResponseDTO urlResponseDTO = UrlResponseDTO.builder()
                     .originalUrl(url.getOriginalUrl())
                     .shortCode(url.getShortCode())
-                    .shortUrl("http://localhost:8080/shorten/" + url.getShortCode())
+                    .shortUrl(baseUrl + url.getShortCode())
                     .createdAt(url.getCreatedAt().format(formatter))
                     .accessCount(accessCount)  // Añadir el número de accesos
                     .build();
