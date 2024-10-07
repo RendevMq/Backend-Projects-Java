@@ -4,7 +4,7 @@ Este proyecto es una API RESTful desarrollada con Spring Boot, que permite acort
 
 ## Implementación con un FrontEnd
 Se implementó con un FrontEnd desarrollado en React.js para que de esta forma se pruebe la funcionalidad de todos los endpoints que ofrece el Backend.
-- Código Front : [Frontend](https://github.com/RendevMq/UrlShortenerFront)
+- Código Front : [URL Shortener Frontend](https://github.com/RendevMq/UrlShortenerFront)
 - Demo
 
 https://github.com/user-attachments/assets/b731e88e-9776-4270-9911-ef4323c2c4b3
