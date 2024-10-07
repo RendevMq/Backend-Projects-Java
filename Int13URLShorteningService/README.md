@@ -8,11 +8,17 @@ Este proyecto es una API RESTful desarrollada con Spring Boot, que permite acort
 
 ## Reto
 Para más información sobre el reto, visita el siguiente enlace: [URL Shortening Service Challenge](https://roadmap.sh/projects/url-shortening-service)
+
+## Implementación con un FrontEnd
+Se implementó con un FrontEnd para que de esta forma se pruebe la funcionalidad de todos los endpoints que ofrece el Backend.
+- Código Front : [Frontend](https://roadmap.sh/projects/url-shortening-service)
+
 ## Características principales
 - Crear una URL corta a partir de una URL larga.
 - Redirigir a la URL original utilizando la URL corta.
 - Obtener estadísticas sobre cuántas veces se ha accedido a la URL corta.
 - Eliminar URLs cortas y sus contadores de accesos.
+- Cachear y gestionar el contador de accesos
 
 ## Tecnologías utilizadas
 - **Java 17**
