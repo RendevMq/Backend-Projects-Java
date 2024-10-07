@@ -20,11 +20,6 @@ Para más información sobre el reto, visita el siguiente enlace: [URL Shortenin
   <img src="images/reto.png" alt="reto" width="800"/>
 </p>
 
-
-
-
-
-
 ## Características principales
 - Crear una URL corta a partir de una URL larga.
 - Redirigir a la URL original utilizando la URL corta.
